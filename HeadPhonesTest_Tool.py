@@ -49,9 +49,11 @@ import string
 import subprocess
 import collections
 import Product_programmer
+from customization import CustomizationOfQC30xFxA
 from Product_programmer import ProductProgram
 import color_beep as tips
 from rf_test import RFTest ,RFTestOfQC30xFxA
+import customization as custom
 __all__ = ["Cmd"]
 
 PROMPT = ' >> '
@@ -108,6 +110,7 @@ class Cmd:
 
         self.menu_up = "HeadPhones Test"
         self.menu_down = "{} Test Tool".format('BL10 and BL20')
+        self.customization = custom.CustomizationOfQC30xFxA()
 
     def cmdloop(self, intro=None):
         """Repeatedly issue a prompt, accept input, parse an initial prefix
@@ -401,6 +404,7 @@ class Cmd:
       
     def do_7(self, line):   
         """F7-1 Module Customization\n"""
+        self.customization.Run()
       
     def do_8(self, line):   
         """F8-1 Integrated Test\n"""
