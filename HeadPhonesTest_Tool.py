@@ -54,6 +54,7 @@ from Product_programmer import ProductProgram
 import color_beep as tips
 from rf_test import RFTest ,RFTestOfQC30xFxA
 import customization as custom
+from global_settings import g
 __all__ = ["Cmd"]
 
 PROMPT = ' >> '
@@ -97,6 +98,7 @@ class Cmd:
 
         """
         import sys
+        self.g = g()
         if stdin is not None:
             self.stdin = stdin
         else:
@@ -186,6 +188,53 @@ class Cmd:
     def preloop(self):
         """Hook method executed once when the cmdloop() method is called."""
         pass
+
+  # changeStation: change current TestBench Station ID
+    #         1 - Station ID changed successfully
+    #
+    def changeStation(self):
+        self.stdout.write('\n')
+        try:
+            user_input = raw_input
+        except NameError:
+            user_input = input
+        ret = user_input(u'Input Testbench Station ID [' + self.g.station + ']: ')
+
+        if len(ret) > 1:
+            self.g.station = ret
+            msg = u'Testbench Station ID changed to STN:[' + self.g.station + ']'
+            #self.asylog.change_filter(self.g.module, self.g.station, self.g.serial)
+            #self.logger.info(msg)
+        else:
+            self.stdout.write('\n')
+
+    #
+    # changeSerial: change current Serial ID of DUT being processed
+    #
+    #         1 - Serial ID changed successfully
+    #
+    def changeSerial(self):
+        self.stdout.write('\n')
+        try:
+            user_input = raw_input
+        except NameError:
+            user_input = input
+
+        ret = user_input(u'Input DUT Serial ID [' + self.g.serial + ']: ').strip()
+
+        if len(ret) > 0 and ret != self.g.serial:
+            oldserial = self.g.serial
+            self.g.serial = ret
+            msg = 'DUT Serial ID changed from SID-OLD:[' + oldserial + '] to SID-NEW:[' + self.g.serial + ']'
+            # asylog.stop_dut_log(oldserial)
+            #self.logger.info(msg)
+
+        else:
+            #self.logger.critical("The input DUT Serial {} is invalid ".format(ret))
+            print ret
+
+
+
 
     def postloop(self):
         """Hook method executed once when the cmdloop() method is about to
@@ -401,6 +450,8 @@ class Cmd:
       
     def do_6(self, line):   
         """F6-1 Module Programming"""
+        Product_programmer = ProductProgram()
+        Product_programmer.Product_Flashing()
       
     def do_7(self, line):   
         """F7-1 Module Customization\n"""
@@ -412,9 +463,15 @@ class Cmd:
 
     def do_I(self, line):
         """Change Serial ID"""
+        self.changeSerial()
+    def note_I(self):
+        return u"Change Serial ID  [{}]".format(self.g.serial)
 
     def do_T(self, line):
         """Change Station ID"""
+        self.changeStation()
+    def note_T(self):
+        return u"Change Station ID [{}]".format(self.g.station)
 
     def print_topics(self, header, cmds, cmdlen, maxcol):
         if cmds:
