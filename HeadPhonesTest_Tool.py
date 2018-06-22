@@ -55,7 +55,7 @@ __all__ = ["Cmd"]
 
 PROMPT = ' >> '
 IDENTCHARS = string.ascii_letters + string.digits + '_'
-__version__ = "001"
+__version__ = "002"
 
 class Cmd:
     """A simple framework for writing line-oriented command interpreters.
@@ -376,12 +376,32 @@ class Cmd:
         return True
 
     def do_1(self, line):
-        """F1-1 RSSI test"""
-
-    def do_2(self, line):
-        """F2-1 Module Programming\n"""
+        """F1-1 Programming RF Firmware"""
+        
         Product_programmer = ProductProgram()
-        Product_programmer.Product_Flashing()       
+        Product_programmer.Product_Flashing() 
+
+    def do_2(self, line):   
+        """F2-1 External Crystal Oscillator Test"""
+      
+    def do_3(self, line):   
+        """F3-1 BT2.1 BER Test"""
+      
+    def do_4(self, line):   
+        """F4-1 BT2.1 Output Power Test"""
+
+    def do_5(self, line):   
+        """F5-1 Audio Test"""
+      
+    def do_6(self, line):   
+        """F6-1 Module Programming"""
+      
+    def do_7(self, line):   
+        """F7-1 Module Customization\n"""
+      
+    def do_8(self, line):   
+        """F8-1 Integrated Test\n"""
+      
 
     def do_I(self, line):
         """Change Serial ID"""
