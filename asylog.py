@@ -7,10 +7,10 @@ except ImportError:
 from logutils.queue import QueueHandler, QueueListener
 from datetime import datetime
 import os
-from .helpers import Singleton
+from helpers import Singleton
 import logging
 import colorlog
-from .config import Config
+#from config import Config
 
 
 class Asylog(with_metaclass(Singleton, object)):
@@ -45,15 +45,15 @@ class Asylog(with_metaclass(Singleton, object)):
         self.logger.addHandler(sh)
 
         # File log msg setting
-        self.config = Config()
+        #self.config = Config()
 
-        folder_name = "{}_Log_{}".format(self.config.get_module_name(),
-                                         datetime.now().year)
-        folder_path = os.path.join(os.getcwd(), folder_name)
-        self._make_sure_dir_exists(folder_path)
+        #folder_name = "{}_Log_{}".format(self.config.get_module_name(),
+        #                                 datetime.now().year)
+        #folder_path = os.path.join(os.getcwd(), folder_name)
+        #self._make_sure_dir_exists(folder_path)
 
-        filename = '{}.txt'.format(datetime.now().strftime("Log %Y%m%d"))
-        self.log_path = os.path.join(folder_path, filename)
+        #filename = '{}.txt'.format(datetime.now().strftime("Log %Y%m%d"))
+        #self.log_path = os.path.join(folder_path, filename)
 
         fh = logging.FileHandler(self.log_path)
         fmt = logging.Formatter('%(asctime)s, %(levelname)s, %(module)s, %(station)s, %(serial)s, "%(message)s"',

@@ -51,6 +51,7 @@ import collections
 import Product_programmer
 from Product_programmer import ProductProgram
 import color_beep as tips
+from rf_test import RFTest ,RFTestOfQC30xFxA
 __all__ = ["Cmd"]
 
 PROMPT = ' >> '
@@ -383,6 +384,8 @@ class Cmd:
 
     def do_2(self, line):   
         """F2-1 External Crystal Oscillator Test"""
+        rf_test = RFTestOfQC30xFxA()
+        rf_test.frequency_test()
       
     def do_3(self, line):   
         """F3-1 BT2.1 BER Test"""
