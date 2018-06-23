@@ -49,17 +49,25 @@ import string
 import subprocess
 import collections
 import Product_programmer
-from customization import CustomizationOfQC30xFxA
+from customization import CustomizationOfCSRA64215
 from Product_programmer import ProductProgram
 import color_beep as tips
 from rf_test import RFTest ,RFTestOfQC30xFxA
 import customization as custom
 from global_settings import g
+from asylog import Asylog
 __all__ = ["Cmd"]
 
 PROMPT = ' >> '
 IDENTCHARS = string.ascii_letters + string.digits + '_'
-__version__ = "002"
+
+product_name="BL10"
+
+f=open("version.txt")
+ver = f.readline()
+f.close()
+
+__version__ = "1.0.0 svn"+ver
 
 class Cmd:
     """A simple framework for writing line-oriented command interpreters.
@@ -85,6 +93,7 @@ class Cmd:
     nohelp = "*** No help on %s"
     use_rawinput = 1
     
+    
 
     def __init__(self, completekey='tab', stdin=None, stdout=None):
         """Instantiate a line-oriented interpreter framework.
@@ -98,7 +107,15 @@ class Cmd:
 
         """
         import sys
+
+        self.asylog = Asylog()
         self.g = g()
+        #print (self.g.serial)
+        #raw_input("Press any key")
+        self.asylog.change_filter(self.g.module, self.g.station,self.g.serial)
+        self.asylog.start()
+        self.logger = self.asylog.getLogger()
+        
         if stdin is not None:
             self.stdin = stdin
         else:
@@ -112,7 +129,8 @@ class Cmd:
 
         self.menu_up = "HeadPhones Test"
         self.menu_down = "{} Test Tool".format('BL10 and BL20')
-        self.customization = custom.CustomizationOfQC30xFxA()
+        self.customization = custom.CustomizationOfCSRA64215()
+        self.logger.info("HeadPhonesTest_Tool ver : {}".format(__version__))
 
     def cmdloop(self, intro=None):
         """Repeatedly issue a prompt, accept input, parse an initial prefix
@@ -430,12 +448,13 @@ class Cmd:
 
     def do_1(self, line):
         """F1-1 Programming RF Firmware"""
-        
+        self.logger.info('Performing Programming RF Firmware: {}'.format(product_name))
         Product_programmer = ProductProgram()
         Product_programmer.Product_Flashing() 
 
-    def do_2(self, line):   
+    def do_2(self, line):
         """F2-1 External Crystal Oscillator Test"""
+        self.logger.info('Performing External Crystal Oscillator Test: {}'.format(product_name))
         rf_test = RFTestOfQC30xFxA()
         rf_test.frequency_test()
       
@@ -450,11 +469,13 @@ class Cmd:
       
     def do_6(self, line):   
         """F6-1 Module Programming"""
+        self.logger.info('Performing Module Programming: {}'.format(product_name))
         Product_programmer = ProductProgram()
         Product_programmer.Product_Flashing()
       
     def do_7(self, line):   
         """F7-1 Module Customization\n"""
+        self.logger.info('Performing Module Customization: {}'.format(product_name))
         self.customization.Run()
       
     def do_8(self, line):   
