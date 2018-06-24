@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<application>
+
+    <!--product: product name to be tested-->
+    <!--Examples  : BL10_CSRA64216, BL10_QCC300x, BL20_CSRA64216, BL20_QCC300x -->
+    <product>BL10_CSRA64215</product>
+
+    <!--debug=1: when exception throw, executive information will be printed-->
+    <!--debug=0: when exception throw, executive information will not be printed-->
+    <debug>1</debug>
+
+    <test_case>
+        <!--test_sequence=1645: Run 1, 6, 4, and 5 continuously-->
+        <test_sequence>1267</test_sequence>
+
+        <test_repeat>
+            <!--count=0: run forever-->
+            <!--count=n: run n times-->
+            <count>1</count>
+
+            <!--stop_at_fail=1: stop when exception happened-->
+            <!--stop_at_fail=0: not stop when exception happened-->
+            <stop_at_fail>1</stop_at_fail>
+
+            <!--count=0: run one time-->
+            <!--count=n: if RX_TX test fail will run n times-->
+            <RX_TX_Fail_Count>3</RX_TX_Fail_Count>
+
+        </test_repeat>
+    </test_case>
+
+    <interface>
+
+        <!--dut_ble_port: interface for Bluetooth DUT modules including BLE and BT2.1-->
+        <!--Remarks : dut_ble_port is a legacy name, it also applies to newly added BT2.1 modules-->
+        <!--Examples  : SPI (for QC30xFxA and CSRA64215)-->
+        <dut_ble_port>SPI</dut_ble_port>
+
+        <!--ref_ble_port: interface for Bluetooth reference modules including BLE and BT2.1 -->
+        <!--Remarks : ref_ble_port is a legacy name, it also applies to newly added BT2.1-->
+        <!--          reference modules. Only COM interface is supported for reference modules.-->
+        <ref_ble_port>COM4</ref_ble_port>
+
+        <!--freq_counter_port: Need to be set for frequency test-->
+        <freq_counter_port>COM3</freq_counter_port>
+    </interface>
+
+    <frequency_counter model_name="FC2700">
+
+        <!--compensation_hz: Frequency counter compensation-->
+        <!--compensation_hz=0: Not compensated-->
+        <!--compensation_hz=n: compensate n hz-->
+        <compensation_hz>0</compensation_hz>
+
+    </frequency_counter>
+
+</application>

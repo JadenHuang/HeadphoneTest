@@ -9,6 +9,8 @@ import subprocess
 import os
 import msvcrt
 import sys
+from config import Config
+from construct.core import ConstructError
 
 #from asylog import Asylog
 #from ModuleTest_Tool.rf_lib.hci_function import HCI
@@ -23,7 +25,11 @@ class RFTestError(AppError):
 
 class RFTest(object):
     def __init__(self):
+
         #self.logger = Asylog().getLogger()
+        self.config = Config()
+        app_config = self.config.get_app_config()
+        mod_config =self.config.get_product_config()
 
 
         # self.ref_comport = None
@@ -104,22 +110,27 @@ class RFTestOfQC30xFxA(RFTest):
             #raw_input("Press any key to start merging PSR")
             self.openCSRTestEngine()
             #find and merge prePSRfile
-            self.merge_PSR("C:\Users\Jaden\Desktop\Production_of_software\BL20.psr")
+            self.merge_PSR(self.mod_config.find(".//rf_test/crystal_oscillator_error/prePSRfile").text)
             #self.csrLib.bccmdSetColdReset()  #warm reset to make configurations effective
 
             #raw_input("Frequency being output")
-            freq_port = "COM7"
-            compensation = 0
+            freq_port = self.app_config.find(".//interface/freq_counter_port").text
+            compensation = int(self.app_config.find(".//frequency_counter/compensation_hz").text)
 
-            high = 15
-            low = -15
+            high = int(self.mod_config.find(".//rf_test/crystal_oscillator_error/limit/eco1/high").text)
+            low = int(self.mod_config.find(".//rf_test/crystal_oscillator_error/limit/eco1/low").text)
             time.sleep(1)
-            frequency = 1000000
+            frequency = int(
+                self.mod_config.find(".//rf_test/crystal_oscillator_error/limit/eco1").attrib['frequency_hz'])
 
             self.frequency(freq_port, low, high, frequency, compensation)
 
             #find and merge postPSRfile
+            self.merge_PSR(self.mod_config.find(".//rf_test/crystal_oscillator_error/postPSRfile").text)
+
+            #find and merge postPSRfile
             #self.merge_PSR(self.mod_config.find(".//rf_test/crystal_oscillator_error/postPSRfile").text)
+
 
         finally:
             self.closeCSRTestEngine()

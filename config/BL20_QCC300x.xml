@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<product name="QCC300x" platform="CSR_BT">
+    <allowed_testcases>1,4,6,7,8,9,A</allowed_testcases>
+
+    <program type="SPI" action="PROGRAM">
+        <directory>flash\BL20_QCC300x</directory>
+        <firmware>BL20_QCC300x_SVN487.xuv</firmware>
+    </program>
+
+    <rf_test>
+        <testprogram type="SPI" action="ERASE">
+            <directory>rf_lib\firmware\BL20_QCC300x</directory>
+            <firmware>BL20_QCC300x_RF_Test.xuv</firmware>
+        </testprogram>
+        <power_test>
+            <spectrum_analyzer>
+                <ip>192.168.0.1</ip>
+                <sweep_time>380</sweep_time>
+                <trg_level>-50</trg_level>
+            </spectrum_analyzer>
+            <limit>
+                <high>-10</high>
+                <low>-35</low>
+            </limit>
+        </power_test>
+        <BT21_Power_Test>
+            <frequency>2402, 2441, 2450</frequency>
+            <intPA>50</intPA>
+            <extPA>0</extPA>
+            <intmod>0</intmod>
+            <sampleSize>20</sampleSize>
+            <limit>
+                <high>60</high>
+                <low>50</low>
+            </limit>
+        </BT21_Power_Test>
+        <per_test>
+            <tx>
+                <channels>0,19,39</channels>
+                <packet_payload>PSN9</packet_payload>
+                <length_of_test_data>37</length_of_test_data>
+                <number_of_packets>1504</number_of_packets>
+                <max_packet_loss_rate>1%</max_packet_loss_rate>
+            </tx>
+            <rx>
+                <channels>0,19,39</channels>
+                <packet_payload>PSN9</packet_payload>
+                <length_of_test_data>37</length_of_test_data>
+                <number_of_packets>1504</number_of_packets>
+                <max_packet_loss_rate>1%</max_packet_loss_rate>
+            </rx>
+        </per_test>
+
+        <crystal_oscillator_error>
+            <prePSRfile>enable_freq_pio8.psr</prePSRfile>
+            <postPSRfile>disable_freq_pio8.psr</postPSRfile>
+            <limit>
+                <eco1 frequency_hz="1000000">
+                    <high>15</high>
+                    <low>-15</low>
+                </eco1>
+                <eco2 frequency_hz="32768">
+                    <high>10</high>
+                    <low>-10</low>
+                </eco2>
+            </limit>
+        </crystal_oscillator_error>
+        <BT21_BER_Test>
+            <channel>1, 39, 78</channel>
+            <hopen>0</hopen>
+            <sampleSize>10000</sampleSize>
+            <packet>2-DH5</packet>
+            <tx>
+                <intPA>50</intPA>
+                <extPA>0</extPA>
+                <intmod>0</intmod>
+            </tx>
+            <rx>
+                <rx_attenuation>0</rx_attenuation>
+            </rx>
+            <limit>
+                <ber>
+                    <high>1.0</high>
+                    <low>0.0</low>
+                </ber>
+            </limit>
+        </BT21_BER_Test>
+    </rf_test>
+</product>

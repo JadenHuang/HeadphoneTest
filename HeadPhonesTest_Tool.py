@@ -56,6 +56,7 @@ from rf_test import RFTest ,RFTestOfQC30xFxA
 import customization as custom
 from global_settings import g
 from asylog import Asylog
+from config import Config
 __all__ = ["Cmd"]
 
 PROMPT = ' >> '
@@ -64,7 +65,7 @@ IDENTCHARS = string.ascii_letters + string.digits + '_'
 product_name="BL10"
 
 f=open("version.txt")
-ver = f.readline()
+ver = f.readline().strip('\n')
 f.close()
 
 __version__ = "1.0.0 svn"+ver
@@ -108,6 +109,8 @@ class Cmd:
         """
         import sys
 
+        self.cfg = Config()  # product config
+
         self.asylog = Asylog()
         self.g = g()
         #print (self.g.serial)
@@ -128,7 +131,8 @@ class Cmd:
         self.completekey = completekey
 
         self.menu_up = "HeadPhones Test"
-        self.menu_down = "{} Test Tool".format('BL10 and BL20')
+        self.menu_down = "{} Test Tool".format(self.cfg.get_product_name())
+
         self.customization = custom.CustomizationOfCSRA64215()
         self.logger.info("HeadPhonesTest_Tool ver : {}".format(__version__))
 
@@ -203,9 +207,6 @@ class Cmd:
             self.__menu()
         return stop
 
-    def preloop(self):
-        """Hook method executed once when the cmdloop() method is called."""
-        pass
 
   # changeStation: change current TestBench Station ID
     #         1 - Station ID changed successfully
@@ -480,7 +481,11 @@ class Cmd:
       
     def do_8(self, line):   
         """F8-1 Integrated Test\n"""
-      
+        app_config = self.cfg.get_app_config()
+        test_sequence = app_config.find(".//test_case/test_sequence").text
+        for i in test_sequence:
+            if i in (string.ascii_letters + string.digits):
+                eval("self.do_{}(None)".format(i.upper()))    
 
     def do_I(self, line):
         """Change Serial ID"""

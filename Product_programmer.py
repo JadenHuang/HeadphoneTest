@@ -1,16 +1,24 @@
+# -*- coding: utf-8 -*-
 import subprocess
 from helpers import AppError
 import color_beep as tips
 from asylog import Asylog
+from config import Config
+import os
 name ="Error"
 class ProductProgramError():
     pass
 
 class ProductProgram(object):
     def __init__(self):
+        self.config = Config()
+        mod_config =self.config.get_product_config()
+        relative_dir = mod_config.find(".//program/directory").text
+        abs_dir = os.path.join(os.getcwd(),relative_dir)
+        firmware = os.path.join(abs_dir,mod_config.find(".//program/firmware").text)
         self.logger = Asylog().getLogger()
         self.cmd_order='burn'
-        self.software_path='C:\Users\Jaden\Desktop\BL10_Software\BL10.XUV'
+        self.software_path=firmware
         print ("Software Path:"+self.software_path)
 
 
