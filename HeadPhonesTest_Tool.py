@@ -48,7 +48,7 @@ they automatically support Emacs-like command history and editing features.
 import string
 import subprocess
 import collections
-import Product_programmer
+from RF_programmer import RFProgram
 from customization import CustomizationOfCSRA64215
 from Product_programmer import ProductProgram
 import color_beep as tips
@@ -450,20 +450,22 @@ class Cmd:
     def do_1(self, line):
         """F1-1 Programming RF Firmware"""
         self.logger.info('Performing Programming RF Firmware: {}'.format(product_name))
-        Product_programmer = ProductProgram()
-        Product_programmer.Product_Flashing() 
+        RF_programmer = RFProgram()
+        RF_programmer.RF_Flashing() 
 
     def do_2(self, line):
         """F2-1 External Crystal Oscillator Test"""
         self.logger.info('Performing External Crystal Oscillator Test: {}'.format(product_name))
-        rf_test = RFTestOfQC30xFxA()
-        rf_test.frequency_test()
+        self.rf_test.frequency_test()
       
     def do_3(self, line):   
         """F3-1 BT2.1 BER Test"""
-      
+        #self.rf_test.init_ble_module()
+        self.rf_test.BT_BER_LoopBack_Test()     
     def do_4(self, line):   
         """F4-1 BT2.1 Output Power Test"""
+        #self.rf_test.init_ble_module()
+        self.rf_test.BT_power_test()
 
     def do_5(self, line):   
         """F5-1 Audio Test"""
@@ -565,6 +567,7 @@ class Cmd:
     def preloop(self):
         self.stdout.write('\n%s\n\n' % self.__banner(self.menu_up, self.menu_down, __version__))
         self.__menu()
+        self.rf_test = RFTestOfQC30xFxA()
 
 
     def __banner(self, up='up', down='down', version="0.0.0"):
