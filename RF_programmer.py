@@ -19,6 +19,7 @@ class RFProgram(object):
         self.logger = Asylog().getLogger()
         self.cmd_order='burn'
         self.software_path=firmware
+        #self.software_path="C:\Users\Jaden\Desktop\Production_of_software\BL10_SVN488.XUV"
         print ("Software Path:"+self.software_path)
 
 

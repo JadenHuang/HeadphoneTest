@@ -95,8 +95,14 @@ class RFTestOfQC30xFxA(RFTest):
         if psrFile == "": 
             return
         #create full path for psrFile
+        mod_config = self.config.get_product_config()
+        relative_dir = mod_config.find(".//rf_test/testprogram/directory").text
+        abs_dir = os.path.join(os.getcwd(), relative_dir)
+
+        print abs_dir
+        print psrFile
     
-        psrFileFullPath = psrFile
+        psrFileFullPath = os.path.join(abs_dir, psrFile)
 
         if os.path.isfile(psrFileFullPath):
             self.csrLib.merge_CSR_pscli(self.csrLib.dutport, psrFileFullPath)
@@ -113,7 +119,7 @@ class RFTestOfQC30xFxA(RFTest):
             self.openCSRTestEngine()
             #find and merge prePSRfile
             self.merge_PSR(self.mod_config.find(".//rf_test/crystal_oscillator_error/prePSRfile").text)
-            #self.csrLib.bccmdSetColdReset()  #warm reset to make configurations effective
+            self.csrLib.bccmdSetColdReset(self.csrLib.dutport)  #warm reset to make configurations effective
 
             #raw_input("Frequency being output")
             freq_port = self.app_config.find(".//interface/freq_counter_port").text
