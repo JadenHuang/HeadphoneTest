@@ -19,7 +19,7 @@ class ProductProgram(object):
         self.logger = Asylog().getLogger()
         self.cmd_order='burn'
         self.software_path=firmware
-        #print ("Software Path:"+self.software_path)
+        self.logger.info("Software_Name:"+mod_config.find(".//program/firmware").text)
 
 
     # -------------------------------------------------------------------------
@@ -29,7 +29,7 @@ class ProductProgram(object):
         try:
             command = "nvscmd.exe {} {}".format(self.cmd_order, self.software_path)
             subprocess.check_call(command, shell=True)
-            #self.logger.info('Programming Success')
+            self.logger.info('Programming Success')
             
         except Exception:
             self.logger.info('Programming Fail')

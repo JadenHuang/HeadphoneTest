@@ -315,6 +315,7 @@ class Cmd:
                 if cmd not in ["Q", "EOF", "KeyInt"]:
                     tips.print_green(tips.pass_big_font)
             except Exception as err:
+                self.logger.critical(self.error_msg(err))
                 if self.cfg.get_debug_enable():
                     tips.print_red(tips.fail_big_font)
 
@@ -484,6 +485,7 @@ class Cmd:
 
     def do_5(self, line):   
         """F5-1 Audio Test"""
+        raise AppError("Test case not supported")
       
     def do_6(self, line):   
         """F6-1 Module Programming"""
@@ -653,6 +655,7 @@ if __name__ == '__main__':
         app = Cmd()
         app.cmdloop()
     except Exception as e:
+        app.logger.critical(app.error_msg(e))
         if app:
            app.close()
         subprocess.call("pause", shell=True)
