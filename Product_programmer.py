@@ -6,7 +6,7 @@ from asylog import Asylog
 from config import Config
 import os
 name ="Error"
-class ProductProgramError():
+class ProductProgramError(AppError):
     pass
 
 class ProductProgram(object):
@@ -19,7 +19,7 @@ class ProductProgram(object):
         self.logger = Asylog().getLogger()
         self.cmd_order='burn'
         self.software_path=firmware
-        print ("Software Path:"+self.software_path)
+        #print ("Software Path:"+self.software_path)
 
 
     # -------------------------------------------------------------------------
@@ -29,14 +29,11 @@ class ProductProgram(object):
         try:
             command = "nvscmd.exe {} {}".format(self.cmd_order, self.software_path)
             subprocess.check_call(command, shell=True)
-            self.logger.info('Programming Success')
-            tips.print_green(tips.pass_big_font)
+            #self.logger.info('Programming Success')
             
         except Exception:
             self.logger.info('Programming Fail')
-            tips.print_red(tips.fail_big_font)
-            #raise ProductProgramError("Platform {} not supported yet".format(name))
-
+            raise ProductProgramError("Platform {} not supported yet".format(name))
 
 
 

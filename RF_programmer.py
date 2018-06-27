@@ -31,12 +31,12 @@ class RFProgram(object):
             command = "nvscmd.exe {} {}".format(self.cmd_order, self.software_path)
             subprocess.check_call(command, shell=True)
             self.logger.info('Programming Success')
-            tips.print_green(tips.pass_big_font)
+            #tips.print_green(tips.pass_big_font)
             
         except Exception:
             self.logger.info('Programming Fail')
-            tips.print_red(tips.fail_big_font)
-            #raise ProductProgramError("Platform {} not supported yet".format(name))
+            #tips.print_red(tips.fail_big_font)
+            raise ProductProgramError("Platform {} not supported yet".format(name))
 
 
 

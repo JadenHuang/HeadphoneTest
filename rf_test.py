@@ -47,11 +47,11 @@ class RFTest(object):
             msg = "Frequency_offset = {}Hz ({},{}) in {}kHz eco".format(offset, low_limit, high_limit, frequency / 1000)
             if low_limit < offset < high_limit:
                 self.logger.info("Pass. " + msg)
-                tips.print_green(tips.pass_big_font)
+                #tips.print_green(tips.pass_big_font)
             else:
                 self.logger.critical("Fail. " + msg)
-                #raise AppError("Frequency test Fail")
-                tips.print_red(tips.fail_big_font)
+                raise AppError("Frequency test Fail")
+                #tips.print_red(tips.fail_big_font)
 
 
 class RFTestOfQC30xFxA(RFTest):
@@ -172,10 +172,12 @@ class RFTestOfQC30xFxA(RFTest):
                 msg = "Measured RSSI = {} ({},{}) at {}MHz".format(rssi, lowlimit, highlimit, freq)
                 if lowlimit < rssi < highlimit:
                     self.logger.info("Pass. " + msg)
-                    tips.print_green(tips.pass_big_font)
+                    #tips.print_green(tips.pass_big_font)
                 else:
                     self.logger.critical("Fail. " + msg)
                     raise AppError("Frequency test Fail")
+                    #tips.print_red(tips.fail_big_font)
+
 
         finally:
             self.closeCSRTestEngine()
@@ -255,9 +257,10 @@ class RFTestOfQC30xFxA(RFTest):
                 msg = "Measured %BER = {:4.2f} ({},{}) at channel {}".format(ber, ber_low, ber_high, ch)
                 if ber_low <= ber <= ber_high:
                     self.logger.info("Pass. " + msg)
-                    tips.print_green(tips.pass_big_font)
+                    #tips.print_green(tips.pass_big_font)
                 else:
                     self.logger.critical("Fail. " + msg)
                     raise AppError("BT2.1 loopback BER test Fail")
+                    #tips.print_red(tips.fail_big_font)
         finally:
             self.closeCSRTestEngine()

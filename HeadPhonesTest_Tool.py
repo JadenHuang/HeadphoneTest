@@ -57,12 +57,13 @@ import customization as custom
 from global_settings import g
 from asylog import Asylog
 from config import Config
+import color_beep as tips
+import traceback
+
 __all__ = ["Cmd"]
 
 PROMPT = ' >> '
 IDENTCHARS = string.ascii_letters + string.digits + '_'
-
-product_name="BL10"
 
 f=open("version.txt")
 ver = f.readline().strip('\n')
@@ -118,6 +119,7 @@ class Cmd:
         self.asylog.change_filter(self.g.module, self.g.station,self.g.serial)
         self.asylog.start()
         self.logger = self.asylog.getLogger()
+        self.product_name=self.cfg.get_product_name()
         
         if stdin is not None:
             self.stdin = stdin
@@ -293,6 +295,7 @@ class Cmd:
 
         """
         cmd, arg, line = self.parseline(line)
+        stop = None
         if not line:
             return self.emptyline()
         if cmd is None:
@@ -303,10 +306,20 @@ class Cmd:
         else:
             try:
                 func = getattr(self, 'do_' + cmd)
+                
             except AttributeError:
                 return self.default(line)
-           
-            return func(arg)
+
+            try:
+                stop =func(arg)
+                if cmd not in ["Q", "EOF", "KeyInt"]:
+                    tips.print_green(tips.pass_big_font)
+            except Exception as err:
+                if self.cfg.get_debug_enable():
+                    tips.print_red(tips.fail_big_font)
+
+            return stop
+
 
     def emptyline(self):
         """Called when an empty line is entered in response to the prompt.
@@ -449,22 +462,24 @@ class Cmd:
 
     def do_1(self, line):
         """F1-1 Programming RF Firmware"""
-        self.logger.info('Performing Programming RF Firmware: {}'.format(product_name))
+        self.logger.info('Performing Programming RF Firmware: {}'.format(self.product_name))
         RF_programmer = RFProgram()
         RF_programmer.RF_Flashing() 
 
     def do_2(self, line):
         """F2-1 External Crystal Oscillator Test"""
-        self.logger.info('Performing External Crystal Oscillator Test: {}'.format(product_name))
+        self.logger.info('Performing External Crystal Oscillator Test: {}'.format(self.product_name))
         self.rf_test.frequency_test()
       
     def do_3(self, line):   
         """F3-1 BT2.1 BER Test"""
         #self.rf_test.init_ble_module()
+        self.logger.info('Performing BT2.1 BER Test: {}'.format(self.product_name))
         self.rf_test.BT_BER_LoopBack_Test()     
     def do_4(self, line):   
         """F4-1 BT2.1 Output Power Test"""
         #self.rf_test.init_ble_module()
+        self.logger.info('Performing BT2.1 Output Power Test: {}'.format(self.product_name))
         self.rf_test.BT_power_test()
 
     def do_5(self, line):   
@@ -472,17 +487,18 @@ class Cmd:
       
     def do_6(self, line):   
         """F6-1 Module Programming"""
-        self.logger.info('Performing Module Programming: {}'.format(product_name))
+        self.logger.info('Performing Module Programming: {}'.format(self.product_name))
         Product_programmer = ProductProgram()
         Product_programmer.Product_Flashing()
       
     def do_7(self, line):   
         """F7-1 Module Customization\n"""
-        self.logger.info('Performing Module Customization: {}'.format(product_name))
+        self.logger.info('Performing Module Customization: {}'.format(self.product_name))
         self.customization.Run()
       
     def do_8(self, line):   
         """F8-1 Integrated Test\n"""
+        self.logger.info('Performing Integrated Test: {}'.format(self.product_name))
         app_config = self.cfg.get_app_config()
         test_sequence = app_config.find(".//test_case/test_sequence").text
         for i in test_sequence:
@@ -569,6 +585,9 @@ class Cmd:
         self.__menu()
         self.rf_test = RFTestOfQC30xFxA()
 
+    def error_msg(self, err):
+        return "{}: {}".format(err.__class__.__name__, err)
+
 
     def __banner(self, up='up', down='down', version="0.0.0"):
         # display start up message
@@ -630,5 +649,10 @@ class Cmd:
 if __name__ == '__main__':
     app = None
 
-    app = Cmd()
-    app.cmdloop()
+    try:
+        app = Cmd()
+        app.cmdloop()
+    except Exception as e:
+        if app:
+           app.close()
+        subprocess.call("pause", shell=True)
