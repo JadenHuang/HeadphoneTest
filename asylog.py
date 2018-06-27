@@ -10,7 +10,7 @@ import os
 from helpers import Singleton
 import logging
 import colorlog
-#from config import Config
+from config import Config
 
 
 class Asylog(with_metaclass(Singleton, object)):
@@ -21,6 +21,7 @@ class Asylog(with_metaclass(Singleton, object)):
     '''
 
     def __init__(self):
+
 
         self.logger = colorlog.getLogger(__name__)
         self.logger.setLevel(logging.DEBUG)
@@ -45,9 +46,8 @@ class Asylog(with_metaclass(Singleton, object)):
         self.logger.addHandler(sh)
 
         # File log msg setting
-        #self.config = Config()
-        product_name = "BL10"
-
+        self.config = Config()
+        product_name = self.config.get_product_name()
         folder_name = "{}_Log_{}".format(product_name,
                                          datetime.now().year)
         folder_path = os.path.join(os.getcwd(), folder_name)

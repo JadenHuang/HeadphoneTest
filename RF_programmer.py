@@ -34,8 +34,7 @@ class RFProgram(object):
             #tips.print_green(tips.pass_big_font)
             
         except Exception:
-            self.logger.info('Programming Fail')
-            #tips.print_red(tips.fail_big_font)
+            self.logger.critical('Programming Fail')
             raise ProductProgramError("Platform {} not supported yet".format(name))
 
 

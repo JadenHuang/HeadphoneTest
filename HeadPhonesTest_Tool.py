@@ -111,7 +111,6 @@ class Cmd:
         import sys
 
         self.cfg = Config()  # product config
-
         self.asylog = Asylog()
         self.g = g()
         #print (self.g.serial)
@@ -120,6 +119,7 @@ class Cmd:
         self.asylog.start()
         self.logger = self.asylog.getLogger()
         self.product_name=self.cfg.get_product_name()
+        self.asylog.change_filter(self.cfg.get_product_name(), self.g.station, self.g.serial)
         
         if stdin is not None:
             self.stdin = stdin
@@ -224,8 +224,8 @@ class Cmd:
         if len(ret) > 1:
             self.g.station = ret
             msg = u'Testbench Station ID changed to STN:[' + self.g.station + ']'
-            #self.asylog.change_filter(self.g.module, self.g.station, self.g.serial)
-            #self.logger.info(msg)
+            self.asylog.change_filter(self.g.module, self.g.station, self.g.serial)
+            self.logger.info(msg)
         else:
             self.stdout.write('\n')
 
@@ -247,11 +247,11 @@ class Cmd:
             oldserial = self.g.serial
             self.g.serial = ret
             msg = 'DUT Serial ID changed from SID-OLD:[' + oldserial + '] to SID-NEW:[' + self.g.serial + ']'
-            # asylog.stop_dut_log(oldserial)
-            #self.logger.info(msg)
+            #asylog.stop_dut_log(oldserial)
+            self.logger.info(msg)
 
         else:
-            #self.logger.critical("The input DUT Serial {} is invalid ".format(ret))
+            self.logger.critical("The input DUT Serial {} is invalid ".format(ret))
             print ret
 
 
@@ -311,6 +311,8 @@ class Cmd:
                 return self.default(line)
 
             try:
+
+                self.asylog.change_filter(self.g.module, self.g.station, self.g.serial)
                 stop =func(arg)
                 if cmd not in ["Q", "EOF", "KeyInt"]:
                     tips.print_green(tips.pass_big_font)
@@ -460,6 +462,18 @@ class Cmd:
         """KeyboardInterrupt"""
         self.close()
         return True
+
+    def log_filter_after_test(self, serial=None, station=None):
+        if serial:
+            self.g.serial = serial
+
+        if station:
+            self.g.station = station
+
+        self.asylog.change_filter(self.cfg.get_product_name(), self.g.station, self.g.serial)
+
+    def log_filter_before_test(self):
+        self.asylog.change_filter('MAIN', self.g.station, '000000000000')
 
     def do_1(self, line):
         """F1-1 Programming RF Firmware"""
@@ -651,11 +665,11 @@ class Cmd:
 if __name__ == '__main__':
     app = None
 
-    try:
-        app = Cmd()
-        app.cmdloop()
-    except Exception as e:
-        app.logger.critical(app.error_msg(e))
-        if app:
-           app.close()
-        subprocess.call("pause", shell=True)
+    #try:
+    app = Cmd()
+    app.cmdloop()
+    #except Exception as e:
+        #app.logger.critical(app.error_msg(e))
+        #if app:
+         #  app.close()
+        #subprocess.call("pause", shell=True)
