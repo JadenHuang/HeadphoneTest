@@ -462,24 +462,24 @@ class Cmd:
 
     def do_1(self, line):
         """F1-1 Programming RF Firmware"""
-        self.logger.info('Performing Programming RF Firmware: {}'.format(self.product_name))
+        self.logger.info('-->Performing Programming RF Firmware: {}'.format(self.product_name))
         RF_programmer = RFProgram()
         RF_programmer.RF_Flashing() 
 
     def do_2(self, line):
         """F2-1 External Crystal Oscillator Test"""
-        self.logger.info('Performing External Crystal Oscillator Test: {}'.format(self.product_name))
+        self.logger.info('-->Performing External Crystal Oscillator Test: {}'.format(self.product_name))
         self.rf_test.frequency_test()
       
     def do_3(self, line):   
         """F3-1 BT2.1 BER Test"""
         #self.rf_test.init_ble_module()
-        self.logger.info('Performing BT2.1 BER Test: {}'.format(self.product_name))
+        self.logger.info('-->Performing BT2.1 BER Test: {}'.format(self.product_name))
         self.rf_test.BT_BER_LoopBack_Test()     
     def do_4(self, line):   
         """F4-1 BT2.1 Output Power Test"""
         #self.rf_test.init_ble_module()
-        self.logger.info('Performing BT2.1 Output Power Test: {}'.format(self.product_name))
+        self.logger.info('-->Performing BT2.1 Output Power Test: {}'.format(self.product_name))
         self.rf_test.BT_power_test()
 
     def do_5(self, line):   
@@ -487,18 +487,18 @@ class Cmd:
       
     def do_6(self, line):   
         """F6-1 Module Programming"""
-        self.logger.info('Performing Module Programming: {}'.format(self.product_name))
+        self.logger.info('-->Performing Module Programming: {}'.format(self.product_name))
         Product_programmer = ProductProgram()
         Product_programmer.Product_Flashing()
       
     def do_7(self, line):   
         """F7-1 Module Customization\n"""
-        self.logger.info('Performing Module Customization: {}'.format(self.product_name))
+        self.logger.info('-->Performing Module Customization: {}'.format(self.product_name))
         self.customization.Run()
       
     def do_8(self, line):   
         """F8-1 Integrated Test\n"""
-        self.logger.info('Performing Integrated Test: {}'.format(self.product_name))
+        self.logger.info('-->Performing Integrated Test: {}'.format(self.product_name))
         app_config = self.cfg.get_app_config()
         test_sequence = app_config.find(".//test_case/test_sequence").text
         for i in test_sequence:

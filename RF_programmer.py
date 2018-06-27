@@ -20,7 +20,7 @@ class RFProgram(object):
         self.cmd_order='burn'
         self.software_path=firmware
         #self.software_path="C:\Users\Jaden\Desktop\Production_of_software\BL10_SVN488.XUV"
-        print ("Software Path:"+self.software_path)
+        self.logger.info("Software_Name:"+mod_config.find(".//rf_test/testprogram/firmware").text)
 
 
     # -------------------------------------------------------------------------
